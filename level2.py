@@ -3,9 +3,9 @@ import math
 
 ''''
 google level 2
-grid 8x8 grid
+8x8 grid
 numbered 0-63
-given start and end point calcuate min amount of moves
+given start and end point calculate min amount of moves
 move are similar to knight move in chess 3 squares in any direction then 1 perpendicular ( L shape )
 '''
 
@@ -100,34 +100,36 @@ def find_next(start_point, end_point):
     return valid_coords
 
 
-def check_range(value,start=0, end=63):
+def check_range(value, s=0, e=63):
     """
     check to see if user input correct values
     :param value: int value
-    :return: True in range
+    :param s: int value , start of range
+    :param e: int value, end of range
+    :return: True if in range
     """
-    return start <= value <= end
+    return s <= value <= e
 
 
-def main_func(valid_coords, start, end):
+def next_step(valid_coords, grid_start, grid_end):
     """
     needed a function so that we can break out of loop as soon as endpoint is reached
     :param valid_coords: list of tuples (x,y) integers
-    :param start:        starting point tuple (x,y)
-    :param end:          ending point tuple (x,y)
+    :param grid_start:        starting point tuple (x,y)
+    :param grid_end:          ending point tuple (x,y)
     :return:            de-duped list of next coords, (x,y) tuple, to check
                         returns None if no more points to go to
     """
     step = []
     for coord in valid_coords:
-        if coord == end:
-            # first step found endpoint
+        if coord == grid_end:
+            # first step found grid_endpoint
             return None
-        elif coord == start:  # no need to go back a step
+        elif coord == grid_start:  # no need to go back a step
             break
         else:
-            cur_point = find_next(coord, end)
-            if cur_point == end:
+            cur_point = find_next(coord, grid_end)
+            if cur_point == grid_end:
                 return None
             if cur_point is None:
                 return None
@@ -135,7 +137,8 @@ def main_func(valid_coords, start, end):
     step = list(set(step))
     return step
 
-if __name__ == "__main__":
+
+def main():
     # grab start and end values from command line
     values = [None, None]
 
@@ -172,19 +175,24 @@ if __name__ == "__main__":
     start = to_grid(values[0])
     end = to_grid(values[1])
 
-    next_step = []
     counter = 0
     # start it off
     if start == end:
         pass
     else:
-        next_step = find_next(start, end)
+        next_valid_step = find_next(start, end)
 
         while True:
             counter += 1
-            if next_step is None:
+            if next_valid_step is None:
                 break
             else:
-                next_step = main_func(next_step, start, end)
+                next_valid_step = next_step(next_valid_step, start, end)
 
     print 'reached endpoint with %d steps' % counter
+if __name__ == "__main__":
+    main()
+
+else:
+    # run if code is imported
+    pass
